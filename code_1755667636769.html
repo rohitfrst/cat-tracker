@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAT Prep Tracker - Complete Enhanced Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #f59e0b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+            --dark-color: #1f2937;
+            --light-color: #f8fafc;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Authentication Styles */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .auth-body {
+            padding: 2rem;
+        }
+
+        .form-floating label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-auth {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+            color: white;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .auth-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            display: none;
+        }
+
+        .dashboard-container.active {
+            display: block;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin: 0.25rem 1rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--dark-color);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+        }
+
+        .alert {
+            border: none;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Enhanced Feature Styles */
+        .weakness-item, .strength-item, .neutral-item {
+            border-left: 4px solid;
+            margin-bottom: 0.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .weakness-item {
+            border-left-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .strength-item {
+            border-left-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .neutral-item {
+            border-left-color: var(--warning-color);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .revision-item {
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+
+        .revision-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .revision-item.completed {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success-color);
+        }
+
+        .error-item {
+            border-left: 4px solid var(--danger-color);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(239, 68, 68, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        .error-category {
+            display: inline-block;
+            background: var(--danger-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, var(--success-color), var(--info-color));
+            color: white;
+            margin: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .badge-item:hover {
+            transform: scale(1.05);
+        }
+
+        .badge-item.earned {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .streak-counter {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .resource-item:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+            color: inherit;
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+        }
+
+        .progress-custom {
+            height: 20px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .progress-bar-custom {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        .notification.info {
+            background: var(--info-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .auth-card {
+                margin: 10px;
+            }
+
+            .auth-body {
+                padding: 1.5rem;
+            }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Container -->
+    <div id="authContainer" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2><i class="fas fa-graduation-cap me-2"></i>CAT Prep Tracker</h2>
+                <p class="mb-0">Your complete preparation platform</p>
+            </div>
+            <div class="auth-body">
+                <!-- Login Form -->
+                <div id="loginForm" class="auth-form">
+                    <h4 class="text-center mb-4">Welcome Back!</h4>
+                    <div id="loginAlert" class="alert alert-danger d-none" role="alert"></div>
+                    
+                    <form id="loginFormElement">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="loginEmail" placeholder="Email" required value="demo@catprep.com">
+                            <label for="loginEmail">Email Address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Password" required value="demo123">
+                            <label for="loginPassword">Password</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-auth" id="loginBtn">
+                            <span class="btn-text">Sign In</span>
+                            <span class="loading-spinner d-none"></span>
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <small class="text-muted">Demo credentials: demo@catprep.com / demo123</small>
+                    </div>
+
+                    <div class="auth-switch">
+                        <p>Don't have an account? <a href="#" onclick="showRegister()">Sign up here</a></p>
+                    </div>
+                </div>
+
+                <!-- Registration Form -->
+                <div id="registerForm" class="auth-form d-none">
+                    <h4 class="text-center mb-4">Join CAT Prep Tracker</h4>
+                    <div id="registerAlert" class="alert alert-danger d-none" role="alert"></div>
+                    
+                    <form id="registerFormElement">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="registerFirstName" placeholder="First Name" required>
+                                    <label for="registerFirstName">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="registerLastName" placeholder="Last Name" required>
+                                    <label for="registerLastName">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="registerUsername" placeholder="Username" required>
+                            <label for="registerUsername">Username</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="registerEmail" placeholder="Email" required>
+                            <label for="registerEmail">Email Address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="registerPassword" placeholder="Password" required>
+                            <label for="registerPassword">Password</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                            <label for="confirmPassword">Confirm Password</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the Terms and Privacy Policy
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-auth" id="registerBtn">
+                            <span class="btn-text">Create Account</span>
+                            <span class="loading-spinner d-none"></span>
+                        </button>
+                    </form>
+
+                    <div class="auth-switch">
+                        <p>Already have an account? <a href="#" onclick="showLogin()">Sign in here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboardContainer" class="dashboard-container">
+        <button class="mobile-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">DS</div>
+                    <div>
+                        <div class="fw-bold" id="userName">Demo Student</div>
+                        <small id="userEmail">demo@catprep.com</small>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i>Dashboard
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('mock-analysis')">
+                        <i class="fas fa-chart-bar"></i>Mock Analysis
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('weakness')">
+                        <i class="fas fa-chart-line"></i>Weakness Analysis
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('revision')">
+                        <i class="fas fa-calendar-alt"></i>Revision Planner
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('peer')">
+                        <i class="fas fa-users"></i>Peer Comparison
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('time')">
+                        <i class="fas fa-clock"></i>Time Analytics
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('errors')">
+                        <i class="fas fa-exclamation-triangle"></i>Error Log
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('streaks')">
+                        <i class="fas fa-fire"></i>Streaks & Rewards
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('resources')">
+                        <i class="fas fa-book"></i>Resource Library
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i>Settings
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="content-section active">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="mb-2">Welcome back, <span id="dashboardUserName">Demo Student</span>! 🎯</h3>
+                        <p class="mb-0">Ready to continue your CAT preparation journey?</p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stats-card">
+                            <div class="card-body text-center">
+                                <h3 class="mb-0">15</h3>
+                                <small>Study Streak</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stats-card">
+                            <div class="card-body text-center">
+                                <h3 class="mb-0">78.5%</h3>
+                                <small>Mock Average</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stats-card">
+                            <div class="card-body text-center">
+                                <h3 class="mb-0">42</h3>
+                                <small>Hours This Month</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stats-card">
+                            <div class="card-body text-center">
+                                <h3 class="mb-0">42</h3>
+                                <small>Days to CAT</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Performance Overview</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="performanceChart" height="100"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Today's Focus</h5>
+                            </div>
+                            <div class="card-body">
+                                <h6>📚 Data Interpretation</h6>
+                                <p class="mb-3">Based on your weakness analysis</p>
+                                <button class="btn btn-primary btn-sm">Start Practice</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Quick Actions</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-sm" onclick="showSection('time')">
+                                        <i class="fas fa-play me-1"></i>Start Study Session
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="showSection('mock-analysis')">
+                                        <i class="fas fa-plus me-1"></i>Add Mock Result
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="showSection('errors')">
+                                        <i class="fas fa-bug me-1"></i>Log Error
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mock Analysis Section -->
+            <div id="mock-analysis" class="content-section">
+                <h2 class="text-white mb-4">Mock Test Analysis & Performance Tracking</h2>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3 col-sm-6">
+                                <h3 class="text-primary">12</h3>
+                                <small>Total Mocks</small>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <h3 class="text-success">89.2%</h3>
+                                <small>Best Score</small>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <h3 class="text-info">78.5%</h3>
+                                <small>Average Score</small>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <h3 class="text-warning">+8.5%</h3>
+                                <small>Improvement</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Add New Mock Test</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="mockForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="mockName" placeholder="Mock Test Name" required>
+                                        <label for="mockName">Mock Test Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="mockDate" required>
+                                        <label for="mockDate">Date</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="mockDuration">
+                                            <option value="180">180 minutes</option>
+                                            <option value="120">120 minutes</option>
+                                            <option value="60">60 minutes</option>
+                                        </select>
+                                        <label for="mockDuration">Duration</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-primary text-white">
+                                            <h6 class="mb-0">QA Section</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-floating mb-2">
+                                                <input type="number" class="form-control" id="qaPercentile" step="0.01">
+                                                <label for="qaPercentile">Percentile</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-floating">
+                                                        <input type="number" class="form-control" id="qaAttempted">
+                                                        <label for="qaAttempted">Attempted</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-floating">
+                                                        <input type="number" class="form-control" id="qaCorrect">
+                                                        <label for="qaCorrect">Correct</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-warning text-white">
+                                            <h6 class="mb-0">LRDI Section</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-floating mb-2">
+                                                <input type="number" class="form-control" id="lrdiPercentile" step="0.01">
+                                                <label for="lrdiPercentile">Percentile</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-floating">
+                                                        <input type="number" class="form-control" id="lrdiAttempted">
+                                                        <label for="lrdiAttempted">Attempted</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-floating">
+                                                        <input type="number" class="form-control" id="lrdiCorrect">
+                                                        <label for="lrdiCorrect">Correct</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-success text-white">
+                                            <h6 class="mb-0">VARC Section</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-floating mb-2">
+                                                <input type="number" class="form-control" id="varcPercentile" step="0.01">
+                                                <label for="varcPercentile">Percentile</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-floating">
+                                                        <input type="number" class="form-control" id="varcAttempted">
+                                                        <label for="varcAttempted">Attempted</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-floating">
+                                                        <input type="number" class="form-control" id="varcCorrect">
+                                                        <label for="varcCorrect">Correct</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" id="mockNotes" style="height: 100px"></textarea>
+                                        <label for="mockNotes">Notes & Reflections</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="overallPercentile" step="0.01">
+                                        <label for="overallPercentile">Overall Percentile</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-outline-secondary" onclick="clearForm('mockForm')">Clear</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>Save Mock Result
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Recent Mock Tests</h5>
+                    </div>
+                    <div class="card-body" id="mockHistory">
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6>IMS Mock Test 15</h6>
+                                        <small class="text-muted">December 5, 2024 • 180 mins</small>
+                                    </div>
+                                    <h5 class="text-success">85.2%</h5>
+                                </div>
+                                <div class="row text-center mt-2">
+                                    <div class="col-4"><small>QA: 78%</small></div>
+                                    <div class="col-4"><small>LRDI: 82%</small></div>
+                                    <div class="col-4"><small>VARC: 89%</small></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weakness Analysis Section -->
+            <div id="weakness" class="content-section">
+                <h2 class="text-white mb-4">Weakness Analysis & Insights</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Performance Radar</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="weaknessRadarChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Section Trends</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="sectionTrendsChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">
+                                <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Weaknesses</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="weakness-item">
+                                    <h6>Data Interpretation</h6>
+                                    <div class="progress-custom mb-2">
+                                        <div class="progress-bar-custom bg-danger" style="width: 45%"></div>
+                                    </div>
+                                    <small class="text-muted">Average: 45% • Focus on Charts & Graphs</small>
+                                </div>
+                                <div class="weakness-item">
+                                    <h6>Logical Reasoning</h6>
+                                    <div class="progress-custom mb-2">
+                                        <div class="progress-bar-custom bg-danger" style="width: 52%"></div>
+                                    </div>
+                                    <small class="text-muted">Average: 52% • Practice Seating Arrangement</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-warning text-white">
+                                <h5 class="mb-0"><i class="fas fa-balance-scale me-2"></i>Average</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="neutral-item">
+                                    <h6>Reading Comprehension</h6>
+                                    <div class="progress-custom mb-2">
+                                        <div class="progress-bar-custom bg-warning" style="width: 68%"></div>
+                                    </div>
+                                    <small class="text-muted">Average: 68% • Maintain consistency</small>
+                                </div>
+                                <div class="neutral-item">
+                                    <h6>Para Jumbles</h6>
+                                    <div class="progress-custom mb-2">
+                                        <div class="progress-bar-custom bg-warning" style="width: 72%"></div>
+                                    </div>
+                                    <small class="text-muted">Average: 72% • Room for improvement</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>Strengths</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="strength-item">
+                                    <h6>Arithmetic</h6>
+                                    <div class="progress-custom mb-2">
+                                        <div class="progress-bar-custom bg-success" style="width: 85%"></div>
+                                    </div>
+                                    <small class="text-muted">Average: 85% • Excellent performance</small>
+                                </div>
+                                <div class="strength-item">
+                                    <h6>Algebra</h6>
+                                    <div class="progress-custom mb-2">
+                                        <div class="progress-bar-custom bg-success" style="width: 82%"></div>
+                                    </div>
+                                    <small class="text-muted">Average: 82% • Keep up the good work</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Actionable Insights</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <h6><i class="fas fa-lightbulb me-2"></i>Priority Recommendations</h6>
+                            <ul class="mb-0">
+                                <li><strong>Focus on Data Interpretation:</strong> Practice chart reading and calculation accuracy. Allocate 2 hours daily.</li>
+                                <li><strong>Improve Logical Reasoning:</strong> Work on seating arrangement problems. Use elimination techniques.</li>
+                                <li><strong>Time Management:</strong> You're spending too much time on difficult problems. Practice quick elimination.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revision Planner Section -->
+            <div id="revision" class="content-section">
+                <h2 class="text-white mb-4">Revision Planner & Schedule</h2>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Add Revision Topic</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="revisionForm">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="topicName" placeholder="Topic Name" required>
+                                        <label for="topicName">Topic Name</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="topicSection">
+                                            <option value="QA">Quantitative Aptitude</option>
+                                            <option value="LRDI">LRDI</option>
+                                            <option value="VARC">VARC</option>
+                                        </select>
+                                        <label for="topicSection">Section</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="topicPriority">
+                                            <option value="high">High Priority</option>
+                                            <option value="medium">Medium Priority</option>
+                                            <option value="low">Low Priority</option>
+                                        </select>
+                                        <label for="topicPriority">Priority</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="targetDate">
+                                        <label for="targetDate">Target Date</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="estimatedHours" min="1" max="50">
+                                        <label for="estimatedHours">Estimated Hours</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-plus me-1"></i>Add Topic
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Revision Schedule</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Pending Topics</h6>
+                                        <div id="pendingTopics">
+                                            <div class="revision-item">
+                                                <h6>Data Interpretation</h6>
+                                                <small class="text-muted">QA • High Priority • Dec 10</small>
+                                                <div class="mt-2">
+                                                    <button class="btn btn-sm btn-success" onclick="markCompleted(this)">Complete</button>
+                                                </div>
+                                            </div>
+                                            <div class="revision-item">
+                                                <h6>Reading Comprehension</h6>
+                                                <small class="text-muted">VARC • Medium Priority • Dec 12</small>
+                                                <div class="mt-2">
+                                                    <button class="btn btn-sm btn-success" onclick="markCompleted(this)">Complete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Completed Topics</h6>
+                                        <div id="completedTopics">
+                                            <div class="revision-item completed">
+                                                <h6><i class="fas fa-check-circle text-success me-1"></i>Arithmetic</h6>
+                                                <small class="text-muted">QA • Completed Dec 8</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Peer Comparison Section -->
+            <div id="peer" class="content-section">
+                <h2 class="text-white mb-4">Peer Comparison & Analytics</h2>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Add Peer</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="peerForm">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="peerIdentifier" placeholder="Username or Email">
+                                        <label for="peerIdentifier">Username or Email</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-user-plus me-1"></i>Send Invitation
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Your Peer Network</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6>Sarah M.</h6>
+                                                <span class="badge bg-success">Connected</span>
+                                                <div class="mt-2">
+                                                    <small>Mock Average: 82.5%</small><br>
+                                                    <small>Study Streak: 12 days</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6>Raj K.</h6>
+                                                <span class="badge bg-success">Connected</span>
+                                                <div class="mt-2">
+                                                    <small>Mock Average: 75.8%</small><br>
+                                                    <small>Study Streak: 8 days</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Performance Comparison</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="peerComparisonChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Analytics Section -->
+            <div id="time" class="content-section">
+                <h2 class="text-white mb-4">Time Analytics & Study Sessions</h2>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Study Timer</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <h2 id="timerDisplay">00:00:00</h2>
+                                <div class="mt-3">
+                                    <select class="form-select mb-3" id="sessionTopic">
+                                        <option>Data Interpretation</option>
+                                        <option>Logical Reasoning</option>
+                                        <option>Reading Comprehension</option>
+                                        <option>Arithmetic</option>
+                                    </select>
+                                    <div class="btn-group w-100">
+                                        <button class="btn btn-success" id="startTimer" onclick="startTimer()">
+                                            <i class="fas fa-play"></i>
+                                        </button>
+                                        <button class="btn btn-warning" id="pauseTimer" onclick="pauseTimer()">
+                                            <i class="fas fa-pause"></i>
+                                        </button>
+                                        <button class="btn btn-danger" id="stopTimer" onclick="stopTimer()">
+                                            <i class="fas fa-stop"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Time Distribution</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="timeDistributionChart" height="100"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Study Statistics</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h4 class="text-primary">2.5h</h4>
+                                        <small>Today</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h4 class="text-success">18h</h4>
+                                        <small>This Week</small>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h4 class="text-info">3.2h</h4>
+                                        <small>Daily Avg</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h4 class="text-warning">156h</h4>
+                                        <small>Total</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Recent Sessions</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="study-session">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Data Interpretation</span>
+                                        <span>1h 45m</span>
+                                    </div>
+                                    <small class="text-muted">Today, 2:30 PM</small>
+                                </div>
+                                <div class="study-session">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Mock Analysis</span>
+                                        <span>45m</span>
+                                    </div>
+                                    <small class="text-muted">Yesterday, 4:15 PM</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Log Section -->
+            <div id="errors" class="content-section">
+                <h2 class="text-white mb-4">Error Log & Analysis</h2>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Log New Error</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="errorForm">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="errorSection">
+                                            <option value="QA">Quantitative Aptitude</option>
+                                            <option value="LRDI">LRDI</option>
+                                            <option value="VARC">VARC</option>
+                                        </select>
+                                        <label for="errorSection">Section</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="errorTopic" placeholder="Topic">
+                                        <label for="errorTopic">Topic</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="errorType">
+                                            <option value="calculation">Calculation Error</option>
+                                            <option value="conceptual">Conceptual Error</option>
+                                            <option value="silly">Silly Mistake</option>
+                                            <option value="time">Time Management</option>
+                                            <option value="reading">Reading Error</option>
+                                        </select>
+                                        <label for="errorType">Error Type</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" id="errorDescription" style="height: 100px"></textarea>
+                                        <label for="errorDescription">Error Description</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-bug me-1"></i>Log Error
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Error History</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="error-item">
+                                    <span class="error-category">Calculation</span>
+                                    <h6>Percentage Problem</h6>
+                                    <p class="mb-1">Made a calculation error while solving compound interest problem</p>
+                                    <small class="text-muted">Data Interpretation • Dec 8, 2024</small>
+                                </div>
+                                <div class="error-item">
+                                    <span class="error-category">Silly Mistake</span>
+                                    <h6>Reading Comprehension</h6>
+                                    <p class="mb-1">Missed the word "NOT" in the question</p>
+                                    <small class="text-muted">VARC • Dec 7, 2024</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Error Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="errorStatsChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Streaks & Rewards Section -->
+            <div id="streaks" class="content-section">
+                <h2 class="text-white mb-4">Streaks & Rewards System</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header text-center">
+                                <h5 class="mb-0"><i class="fas fa-fire text-danger me-2"></i>Current Streak</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="streak-counter">15</div>
+                                <p class="text-muted">Days of consistent study</p>
+                                <div class="progress-custom">
+                                    <div class="progress-bar-custom" style="width: 75%; background: linear-gradient(45deg, #ff6b6b, #feca57);"></div>
+                                </div>
+                                <small class="text-muted">5 more days to reach 20-day milestone!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Reward Points</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <h2 class="text-primary">1,250</h2>
+                                <p class="text-muted">Total Points Earned</p>
+                                <button class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-gift me-1"></i>Redeem Rewards
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Achievements</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6">
+                                <div class="badge-item earned">
+                                    <i class="fas fa-fire fa-2x"></i>
+                                    <h6 class="mt-2">Week Warrior</h6>
+                                    <small>7 days streak</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="badge-item earned">
+                                    <i class="fas fa-chart-bar fa-2x"></i>
+                                    <h6 class="mt-2">Mock Master</h6>
+                                    <small>10 mocks completed</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="badge-item">
+                                    <i class="fas fa-calendar-check fa-2x"></i>
+                                    <h6 class="mt-2">Monthly Champion</h6>
+                                    <small>30 days streak</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="badge-item">
+                                    <i class="fas fa-crown fa-2x"></i>
+                                    <h6 class="mt-2">CAT Conqueror</h6>
+                                    <small>90+ percentile</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resource Library Section -->
+            <div id="resources" class="content-section">
+                <h2 class="text-white mb-4">Resource Library</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-landmark me-2"></i>Official Resources</h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="https://iimcat.ac.in" target="_blank" class="resource-item">
+                                    <div class="resource-icon bg-primary">
+                                        <i class="fas fa-university"></i>
+                                    </div>
+                                    <div>
+                                        <h6>Official CAT Website</h6>
+                                        <small class="text-muted">Registration & updates</small>
+                                    </div>
+                                </a>
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon bg-success">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div>
+                                        <h6>CAT Information Brochure</h6>
+                                        <small class="text-muted">Complete exam info</small>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Previous Year Papers</h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon bg-warning">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h6>CAT 2023 Paper</h6>
+                                        <small class="text-muted">With solutions</small>
+                                    </div>
+                                </a>
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon bg-warning">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h6>CAT 2022 Paper</h6>
+                                        <small class="text-muted">With solutions</small>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-book me-2"></i>Recommended Books</h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon bg-info">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div>
+                                        <h6>Quantitative Aptitude - R.S. Aggarwal</h6>
+                                        <small class="text-muted">Complete QA preparation</small>
+                                    </div>
+                                </a>
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon bg-info">
+                                        <i class="fas fa-language"></i>
+                                    </div>
+                                    <div>
+                                        <h6>Word Power Made Easy - Norman Lewis</h6>
+                                        <small class="text-muted">Vocabulary building</small>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-video me-2"></i>Video Courses</h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon bg-danger">
+                                        <i class="fab fa-youtube"></i>
+                                    </div>
+                                    <div>
+                                        <h6>Unacademy CAT Courses</h6>
+                                        <small class="text-muted">Free and paid videos</small>
+                                    </div>
+                                </a>
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon bg-secondary">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                    </div>
+                                    <div>
+                                        <h6>Khan Academy Math</h6>
+                                        <small class="text-muted">Foundation building</small>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="content-section">
+                <h2 class="text-white mb-4">Account Settings</h2>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Profile Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" value="Demo" disabled>
+                                                <label>First Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" value="Student" disabled>
+                                                <label>Last Name</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" value="demo@catprep.com" disabled>
+                                        <label>Email Address</label>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" disabled>Update Profile</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Account Statistics</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <small class="text-muted">Member since:</small>
+                                    <div>November 15, 2024</div>
+                                </div>
+                                <div class="mb-2">
+                                    <small class="text-muted">Total mock tests:</small>
+                                    <div>12</div>
+                                </div>
+                                <div class="mb-2">
+                                    <small class="text-muted">Study streak:</small>
+                                    <div>15 days</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Enhanced CAT Tracker Application
+        class CATTrackerApp {
+            constructor() {
+                this.currentUser = null;
+                this.users = this.loadUsers();
+                this.studyTimer = {
+                    isRunning: false,
+                    startTime: null,
+                    elapsed: 0,
+                    interval: null
+                };
+                this.initializeApp();
+                this.initializeDemoUser();
+            }
+
+            initializeDemoUser() {
+                // Create demo user if not exists
+                const demoEmail = 'demo@catprep.com';
+                if (!this.users[demoEmail]) {
+                    this.users[demoEmail] = {
+                        id: 'demo',
+                        firstName: 'Demo',
+                        lastName: 'Student',
+                        username: 'demostudent',
+                        email: demoEmail,
+                        password: this.hashPassword('demo123'),
+                        createdAt: '2024-11-15T00:00:00.000Z',
+                        lastLogin: new Date().toISOString(),
+                        userData: {
+                            mockTests: [],
+                            studyStats: {
+                                studyStreak: 15,
+                                hoursThisMonth: 42,
+                                totalHours: 156,
+                                todayHours: 2.5,
+                                weekHours: 18,
+                                avgDaily: 3.2
+                            },
+                            studySessions: [],
+                            errors: [],
+                            revisionPlan: [],
+                            peers: [],
+                            preferences: {
+                                theme: 'default',
+                                notifications: true
+                            },
+                            achievements: {
+                                badges: ['week_warrior', 'mock_master'],
+                                streaks: {
+                                    current: 15,
+                                    longest: 15,
+                                    history: [3, 7, 12, 15]
+                                },
+                                points: 1250
+                            }
+                        }
+                    };
+                    this.saveUsers();
+                }
+            }
+
+            loadUsers() {
+                const users = localStorage.getItem('catPrepUsers');
+                return users ? JSON.parse(users) : {};
+            }
+
+            saveUsers() {
+                localStorage.setItem('catPrepUsers', JSON.stringify(this.users));
+            }
+
+            hashPassword(password) {
+                return btoa(password + 'catprep_salt_2024');
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+                    ${message}
+                `;
+                
+                const container = document.getElementById('notificationContainer');
+                container.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+
+            initializeApp() {
+                const savedSession = sessionStorage.getItem('catPrepCurrentUser');
+                if (savedSession) {
+                    this.currentUser = JSON.parse(savedSession);
+                    this.showDashboard();
+                } else {
+                    this.showAuth();
+                }
+
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                // Authentication
+                document.getElementById('loginFormElement').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                document.getElementById('registerFormElement').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleRegister();
+                });
+
+                // Forms
+                document.getElementById('mockForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveMockTest();
+                });
+
+                document.getElementById('revisionForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addRevisionTopic();
+                });
+
+                document.getElementById('peerForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addPeer();
+                });
+
+                document.getElementById('errorForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.logError();
+                });
+            }
+
+            async handleLogin() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                this.showLoading('loginBtn');
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                const hashedPassword = this.hashPassword(password);
+                const user = Object.values(this.users).find(u => u.email === email);
+
+                if (user && user.password === hashedPassword) {
+                    user.lastLogin = new Date().toISOString();
+                    this.saveUsers();
+
+                    this.currentUser = user;
+                    sessionStorage.setItem('catPrepCurrentUser', JSON.stringify(user));
+
+                    this.hideLoading('loginBtn');
+                    this.showDashboard();
+                    this.showNotification('Login successful! Welcome back.', 'success');
+                } else {
+                    this.hideLoading('loginBtn');
+                    this.showAlert('loginAlert', 'Invalid email or password.', 'danger');
+                }
+            }
+
+            async handleRegister() {
+                const firstName = document.getElementById('registerFirstName').value;
+                const lastName = document.getElementById('registerLastName').value;
+                const username = document.getElementById('registerUsername').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (password !== confirmPassword) {
+                    this.showAlert('registerAlert', 'Passwords do not match.', 'danger');
+                    return;
+                }
+
+                if (this.users[email]) {
+                    this.showAlert('registerAlert', 'Email already registered.', 'danger');
+                    return;
+                }
+
+                this.showLoading('registerBtn');
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                const user = {
+                    id: Date.now().toString(),
+                    firstName,
+                    lastName,
+                    username,
+                    email,
+                    password: this.hashPassword(password),
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    userData: {
+                        mockTests: [],
+                        studyStats: {
+                            studyStreak: 0,
+                            hoursThisMonth: 0,
+                            totalHours: 0
+                        },
+                        studySessions: [],
+                        errors: [],
+                        revisionPlan: [],
+                        peers: [],
+                        preferences: {
+                            theme: 'default',
+                            notifications: true
+                        },
+                        achievements: {
+                            badges: [],
+                            streaks: { current: 0, longest: 0, history: [] },
+                            points: 0
+                        }
+                    }
+                };
+
+                this.users[email] = user;
+                this.saveUsers();
+                this.currentUser = user;
+                sessionStorage.setItem('catPrepCurrentUser', JSON.stringify(user));
+
+                this.hideLoading('registerBtn');
+                this.showDashboard();
+                this.showNotification('Registration successful! Welcome to CAT Prep Tracker!', 'success');
+            }
+
+            showAuth() {
+                document.getElementById('authContainer').style.display = 'flex';
+                document.getElementById('dashboardContainer').classList.remove('active');
+            }
+
+            showDashboard() {
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('dashboardContainer').classList.add('active');
+                this.initializeCharts();
+                
+                // Set today's date for forms
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('mockDate').value = today;
+                document.getElementById('targetDate').value = today;
+            }
+
+            saveMockTest() {
+                const mockData = {
+                    id: Date.now(),
+                    name: document.getElementById('mockName').value,
+                    date: document.getElementById('mockDate').value,
+                    duration: parseInt(document.getElementById('mockDuration').value),
+                    qa: {
+                        percentile: parseFloat(document.getElementById('qaPercentile').value) || 0,
+                        attempted: parseInt(document.getElementById('qaAttempted').value) || 0,
+                        correct: parseInt(document.getElementById('qaCorrect').value) || 0
+                    },
+                    lrdi: {
+                        percentile: parseFloat(document.getElementById('lrdiPercentile').value) || 0,
+                        attempted: parseInt(document.getElementById('lrdiAttempted').value) || 0,
+                        correct: parseInt(document.getElementById('lrdiCorrect').value) || 0
+                    },
+                    varc: {
+                        percentile: parseFloat(document.getElementById('varcPercentile').value) || 0,
+                        attempted: parseInt(document.getElementById('varcAttempted').value) || 0,
+                        correct: parseInt(document.getElementById('varcCorrect').value) || 0
+                    },
+                    overall: {
+                        percentile: parseFloat(document.getElementById('overallPercentile').value) || 0
+                    },
+                    notes: document.getElementById('mockNotes').value
+                };
+
+                if (!this.currentUser.userData.mockTests) {
+                    this.currentUser.userData.mockTests = [];
+                }
+
+                this.currentUser.userData.mockTests.push(mockData);
+                this.saveUserData();
+                
+                this.clearForm('mockForm');
+                document.getElementById('mockDate').value = new Date().toISOString().split('T')[0];
+                
+                this.showNotification('Mock test saved successfully! 🎉', 'success');
+            }
+
+            addRevisionTopic() {
+                const topicData = {
+                    id: Date.now(),
+                    name: document.getElementById('topicName').value,
+                    section: document.getElementById('topicSection').value,
+                    priority: document.getElementById('topicPriority').value,
+                    targetDate: document.getElementById('targetDate').value,
+                    estimatedHours: parseInt(document.getElementById('estimatedHours').value) || 1,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+
+                if (!this.currentUser.userData.revisionPlan) {
+                    this.currentUser.userData.revisionPlan = [];
+                }
+
+                this.currentUser.userData.revisionPlan.push(topicData);
+                this.saveUserData();
+                
+                this.clearForm('revisionForm');
+                document.getElementById('targetDate').value = new Date().toISOString().split('T')[0];
+                
+                this.showNotification('Revision topic added successfully!', 'success');
+            }
+
+            addPeer() {
+                const identifier = document.getElementById('peerIdentifier').value;
+                
+                const invitation = {
+                    id: Date.now(),
+                    identifier: identifier,
+                    status: 'pending',
+                    sentAt: new Date().toISOString()
+                };
+
+                if (!this.currentUser.userData.peers) {
+                    this.currentUser.userData.peers = [];
+                }
+
+                this.currentUser.userData.peers.push(invitation);
+                this.saveUserData();
+                
+                this.clearForm('peerForm');
+                this.showNotification('Peer invitation sent!', 'success');
+            }
+
+            logError() {
+                const errorData = {
+                    id: Date.now(),
+                    section: document.getElementById('errorSection').value,
+                    topic: document.getElementById('errorTopic').value,
+                    type: document.getElementById('errorType').value,
+                    description: document.getElementById('errorDescription').value,
+                    date: new Date().toISOString()
+                };
+
+                if (!this.currentUser.userData.errors) {
+                    this.currentUser.userData.errors = [];
+                }
+
+                this.currentUser.userData.errors.push(errorData);
+                this.saveUserData();
+                
+                this.clearForm('errorForm');
+                this.showNotification('Error logged successfully!', 'success');
+            }
+
+            // Timer functionality
+            startTimer() {
+                if (this.studyTimer.isRunning) return;
+
+                this.studyTimer.isRunning = true;
+                this.studyTimer.startTime = new Date();
+                
+                this.studyTimer.interval = setInterval(() => {
+                    this.updateTimerDisplay();
+                }, 1000);
+
+                this.showNotification('Study session started! 📚', 'success');
+            }
+
+            pauseTimer() {
+                if (!this.studyTimer.isRunning) return;
+
+                this.studyTimer.isRunning = false;
+                this.studyTimer.elapsed += new Date() - this.studyTimer.startTime;
+                clearInterval(this.studyTimer.interval);
+
+                this.showNotification('Study session paused', 'info');
+            }
+
+            stopTimer() {
+                if (this.studyTimer.interval) {
+                    clearInterval(this.studyTimer.interval);
+                }
+
+                const totalTime = this.studyTimer.isRunning ? 
+                    this.studyTimer.elapsed + (new Date() - this.studyTimer.startTime) : 
+                    this.studyTimer.elapsed;
+
+                // Reset timer
+                this.studyTimer = {
+                    isRunning: false,
+                    startTime: null,
+                    elapsed: 0,
+                    interval: null
+                };
+
+                document.getElementById('timerDisplay').textContent = '00:00:00';
+                this.showNotification('Study session completed! 🎉', 'success');
+            }
+
+            updateTimerDisplay() {
+                const elapsed = this.studyTimer.elapsed + (new Date() - this.studyTimer.startTime);
+                const hours = Math.floor(elapsed / 3600000);
+                const minutes = Math.floor((elapsed % 3600000) / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+
+                document.getElementById('timerDisplay').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            saveUserData() {
+                this.users[this.currentUser.email] = this.currentUser;
+                this.saveUsers();
+                sessionStorage.setItem('catPrepCurrentUser', JSON.stringify(this.currentUser));
+            }
+
+            clearForm(formId) {
+                document.getElementById(formId).reset();
+            }
+
+            showLoading(buttonId) {
+                const btn = document.getElementById(buttonId);
+                const btnText = btn.querySelector('.btn-text');
+                const spinner = btn.querySelector('.loading-spinner');
+                
+                if (btnText) btnText.classList.add('d-none');
+                if (spinner) spinner.classList.remove('d-none');
+                btn.disabled = true;
+            }
+
+            hideLoading(buttonId) {
+                const btn = document.getElementById(buttonId);
+                const btnText = btn.querySelector('.btn-text');
+                const spinner = btn.querySelector('.loading-spinner');
+                
+                if (btnText) btnText.classList.remove('d-none');
+                if (spinner) spinner.classList.add('d-none');
+                btn.disabled = false;
+            }
+
+            showAlert(alertId, message, type) {
+                const alert = document.getElementById(alertId);
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                alert.classList.remove('d-none');
+                
+                setTimeout(() => {
+                    alert.classList.add('d-none');
+                }, 5000);
+            }
+
+            initializeCharts() {
+                // Performance Chart
+                const performanceCtx = document.getElementById('performanceChart');
+                if (performanceCtx) {
+                    new Chart(performanceCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                            datasets: [{
+                                label: 'Performance Trend',
+                                data: [65, 68, 72, 75, 78, 82],
+                                borderColor: '#6366f1',
+                                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            // maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                }
+
+                // Weakness Radar Chart
+                const weaknessCtx = document.getElementById('weaknessRadarChart');
+                if (weaknessCtx) {
+                    new Chart(weaknessCtx, {
+                        type: 'radar',
+                        data: {
+                            labels: ['QA', 'LRDI', 'VARC'],
+                            datasets: [{
+                                label: 'Performance',
+                                data: [75, 60, 85],
+                                backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                                borderColor: '#6366f1',
+                                pointBackgroundColor: '#6366f1'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            // maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    beginAtZero: true,
+                                    max: 100
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Section Trends Chart
+                const sectionCtx = document.getElementById('sectionTrendsChart');
+                if (sectionCtx) {
+                    new Chart(sectionCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Mock 1', 'Mock 2', 'Mock 3', 'Mock 4', 'Mock 5'],
+                            datasets: [
+                                {
+                                    label: 'QA',
+                                    data: [65, 68, 72, 75, 78],
+                                    borderColor: '#3b82f6',
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'LRDI',
+                                    data: [55, 58, 62, 65, 68],
+                                    borderColor: '#f59e0b',
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'VARC',
+                                    data: [75, 78, 82, 85, 88],
+                                    borderColor: '#10b981',
+                                    tension: 0.4
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            // maintainAspectRatio: false
+                        }
+                    });
+                }
+
+                // Peer Comparison Chart
+                const peerCtx = document.getElementById('peerComparisonChart');
+                if (peerCtx) {
+                    new Chart(peerCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['You', 'Sarah M.', 'Raj K.'],
+                            datasets: [{
+                                label: 'Mock Average',
+                                data: [78.5, 82.5, 75.8],
+                                backgroundColor: ['#6366f1', '#10b981', '#f59e0b']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            // maintainAspectRatio: false
+                        }
+                    });
+                }
+
+                // Time Distribution Chart
+                const timeCtx = document.getElementById('timeDistributionChart');
+                if (timeCtx) {
+                    new Chart(timeCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['QA', 'LRDI', 'VARC', 'Mock Tests'],
+                            datasets: [{
+                                data: [35, 25, 25, 15],
+                                backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#ef4444']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            // maintainAspectRatio: false
+                        }
+                    });
+                }
+
+                // Error Stats Chart
+                const errorCtx = document.getElementById('errorStatsChart');
+                if (errorCtx) {
+                    new Chart(errorCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Calculation', 'Conceptual', 'Silly', 'Time', 'Reading'],
+                            datasets: [{
+                                label: 'Error Count',
+                                data: [15, 8, 12, 6, 4],
+                                backgroundColor: '#ef4444'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            // maintainAspectRatio: false
+                        }
+                    });
+                }
+            }
+        }
+
+        // Initialize the application
+        const app = new CATTrackerApp();
+
+        // Global functions
+        function showLogin() {
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.add('d-none'));
+            document.getElementById('loginForm').classList.remove('d-none');
+        }
+
+        function showRegister() {
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.add('d-none'));
+            document.getElementById('registerForm').classList.remove('d-none');
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Hide sidebar on mobile
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('show');
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+
+        function logout() {
+            sessionStorage.removeItem('catPrepCurrentUser');
+            app.showAuth();
+            app.showNotification('Logged out successfully', 'info');
+        }
+
+        function markCompleted(button) {
+            const revisionItem = button.closest('.revision-item');
+            revisionItem.classList.add('completed');
+            button.remove();
+            
+            const completedDiv = document.getElementById('completedTopics');
+            const topicName = revisionItem.querySelector('h6').textContent;
+            
+            completedDiv.innerHTML += `
+                <div class="revision-item completed">
+                    <h6><i class="fas fa-check-circle text-success me-1"></i>${topicName}</h6>
+                    <small class="text-muted">Completed ${new Date().toLocaleDateString()}</small>
+                </div>
+            `;
+            
+            app.showNotification('Topic marked as completed! 🎉', 'success');
+        }
+
+        function startTimer() {
+            app.startTimer();
+        }
+
+        function pauseTimer() {
+            app.pauseTimer();
+        }
+
+        function stopTimer() {
+            app.stopTimer();
+        }
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
